@@ -29,6 +29,7 @@ uses
 
 function TMyController.Index: String;
 begin
+  ViewData['reversed_string'] := '';
   Result := Page('index');
 end;
 
