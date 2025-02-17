@@ -33,6 +33,7 @@ uses
   MVCFramework.Middleware.Analytics,
   MVCFramework.Middleware.Trace,
   MVCFramework.Middleware.CORS,
+  MVCFramework.Middleware.Session,
   MVCFramework.Middleware.ETag,
   MVCFramework.Middleware.Compression,
   ControllerU;
@@ -42,8 +43,6 @@ begin
   FMVC := TMVCEngine.Create(Self,
     procedure(Config: TMVCConfig)
     begin
-      // session timeout (0 means session cookie)
-      Config[TMVCConfigKey.SessionTimeout] := dotEnv.Env('dmvc.session_timeout', '0');
       //default content-type
       Config[TMVCConfigKey.DefaultContentType] := dotEnv.Env('dmvc.default.content_type', TMVCMediaType.TEXT_HTML);
       //default content charset
@@ -81,6 +80,7 @@ begin
   // Serializers - END
 
   // Middleware
+  fMVC.AddMiddleware(UseFileSessionMiddleware);
   fMVC.AddMiddleware(TMVCStaticFilesMiddleware.Create('/assets', TPath.Combine(ExtractFilePath(GetModuleName(HInstance)), 'assets'), '', False));
   // Middleware - END
 
